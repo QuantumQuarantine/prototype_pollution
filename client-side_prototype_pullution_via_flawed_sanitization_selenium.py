@@ -6,6 +6,7 @@ import urllib3
 import warnings
 from selenium import webdriver
 from time import sleep
+from selenium.common.exceptions import UnexpectedAlertPresentException as MaliciousAlert
 
 # Disabilita tutti i warning
 warnings.filterwarnings("ignore")
@@ -21,7 +22,7 @@ def pretty_print(url):
                                                                                                     """)
     text.append(f"This is the malicious payload {url}", style="bold magenta")
     return text
-def main(url: str,number_of_times: int,file_output:str="payload"):
+def main(url: str,number_of_times:int=10,file_output:str="payload"):
     c=Console()
     driver = webdriver.Chrome()
     driver.get(url)
@@ -38,10 +39,9 @@ def main(url: str,number_of_times: int,file_output:str="payload"):
             driver.get(url)
             sleep(2)
             print(driver.page_source)
-        except Exception as e:
-            if "unexpected alert open: {Alert text : 1}":
+        except MaliciousAlert as e:
+            if "unexpected alert open: {Alert text : 1}" in e.msg:
                 c.print(pretty_print(url))
-
                 a = True
         if a:
             break
