@@ -24,6 +24,7 @@ def pretty_print(url):
     return text
 def main(url: str,number_of_times:int=10,file_output:str="payload"):
     c=Console()
+
     driver = webdriver.Chrome()
     driver.get(url)
     http = urllib3.PoolManager(cert_reqs='CERT_NONE', assert_hostname=False)
