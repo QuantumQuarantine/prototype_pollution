@@ -93,10 +93,9 @@ def main(lab_url: str):
             if request.response and "change-address" in request.url:
                 URL_BACKEND = request.url
         cookie = driver.get_cookie("session")["value"]
-        #print(f"Session Cookie : {cookie} ")
+     
         headers = {"Cookie": f"session={cookie}"}
-        # Quando useremo il proxy saremo in grado di prendere la POST e manovrarla
-        # TODO: Typer, Proxy
+        
         tags['sessionId'] = sessionId
         request_to_back_end = requests.post(URL_BACKEND, data=json.dumps(tags), headers=headers)
 
