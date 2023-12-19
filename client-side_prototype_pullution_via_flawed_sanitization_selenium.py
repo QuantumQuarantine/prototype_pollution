@@ -1,6 +1,5 @@
 from rich.console import Console
 from rich.text import Text
-from PIL import Image
 import typer
 import urllib3
 import warnings
