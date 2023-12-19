@@ -74,11 +74,11 @@ def main(lab_url: str):
     sleep(2)
     if driver.current_url != current_url:
         tags = {
-            "address_line_1": "Ponte Pietro Bucci",
-            "address_line_2": "via della Patata,0",
-            "city": "Cosenza",
-            "postcode": "A",
-            "country": "Italy"
+            "address_line_1": "1900 Long Prairie Rd",
+            "address_line_2": "1901 Long Prairie Rd",
+            "city": "Flower Mound",
+            "postcode": "75022",
+            "country": "United States"
         }
         sessionId = update_billing_address(tags, driver)
         sleep(1)
