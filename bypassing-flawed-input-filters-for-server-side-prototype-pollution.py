@@ -75,8 +75,6 @@ def main(lab_url: str):
     c = Console()
     driver = webdriver.Chrome()
     lab_url=lab_url.rstrip("/")
-    print(lab_url)
-    print(f"Hello {lab_url}")
     current_url = login(driver, lab_url)
     sleep(2)
     if driver.current_url != current_url:
