@@ -1,5 +1,5 @@
 <div align="center">
-<img src="https://portswigger.net/web-security/prototype-pollution/images/prototype-pollution-infographic.svg" style="width:50px;"/>
+<img src="https://portswigger.net/web-security/prototype-pollution/images/prototype-pollution-infographic.svg" style="width:500px;"/>
 </div>
 <center><h2>Prototype Pollution</h2></center>
 
