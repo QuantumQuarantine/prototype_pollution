@@ -10,7 +10,7 @@ References:
 <li><a href="https://portswigger.net/web-security/prototype-pollution">What is prototype pollution? - PortSwigger Web Security Academy</a></li>
 </ul>
 
-<center><img src="https://images.bishopfox.com/prod-1437/Images/channels/blog/tiles/Bishop-Fox-Blog-Burp-Suite.jpg" style="border-radius:50%;width:200px;"></center>
+<center><img src="https://images.bishopfox.com/prod-1437/Images/channels/blog/tiles/Bishop-Fox-Blog-Burp-Suite.jpg" style="border-radius:50%;width:200px;"/></center>
 
 <center><h3>Labs solved</h3></center>
 <ol>
